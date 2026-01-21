@@ -2,7 +2,27 @@
 import undetected_chromedriver as uc
 import json
 import time
+import subprocess
+import re
 import pygeohash as pgh
+
+def get_chrome_version():
+    """Detect installed Chrome major version."""
+    commands = [
+        ['google-chrome', '--version'],
+        ['chromium', '--version'],
+        ['chromium-browser', '--version'],
+        ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '--version'],
+    ]
+    for cmd in commands:
+        try:
+            output = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode()
+            match = re.search(r'(\d+)\.', output)
+            if match:
+                return int(match.group(1))
+        except:
+            continue
+    return None
 
 def fetch_tesla_data():
     """Fetch raw station data from Tesla API."""
@@ -11,8 +31,9 @@ def fetch_tesla_data():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-    # Auto-detect Chrome version instead of hardcoding
-    driver = uc.Chrome(options=options, headless=False)
+    chrome_version = get_chrome_version()
+    print(f"Detected Chrome version: {chrome_version}")
+    driver = uc.Chrome(options=options, headless=False, version_main=chrome_version)
 
     try:
         print("Visiting Tesla homepage...")
