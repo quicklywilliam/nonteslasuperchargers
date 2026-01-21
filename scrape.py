@@ -60,6 +60,28 @@ def filter_and_convert(data):
     """Filter for US non-Tesla-compatible stations and convert to geohashes."""
     stations = data.get("data", {}).get("data", [])
 
+    print(f"Total stations in response: {len(stations)}")
+
+    # Debug: show data structure if no stations
+    if len(stations) == 0:
+        print(f"Data keys: {data.keys() if isinstance(data, dict) else type(data)}")
+        if isinstance(data, dict) and "data" in data:
+            print(f"data.data keys: {data['data'].keys() if isinstance(data['data'], dict) else type(data['data'])}")
+
+    # Debug: sample accessibility values
+    accessibility_counts = {}
+    us_count = 0
+    for s in stations:
+        lon = s.get("longitude", 0)
+        if -130 < lon < -60:
+            us_count += 1
+            sf = s.get("supercharger_function", {})
+            acc = sf.get("charging_accessibility", "None")
+            accessibility_counts[acc] = accessibility_counts.get(acc, 0) + 1
+
+    print(f"US stations: {us_count}")
+    print(f"Accessibility values: {accessibility_counts}")
+
     nacs_geohashes = set()
     ccs_geohashes = set()
 
