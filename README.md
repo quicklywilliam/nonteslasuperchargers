@@ -1,8 +1,12 @@
 # Non-Tesla Supercharger Data
 
-A compact lookup file of Tesla Supercharger stations in the US that are compatible with non-Tesla vehicles. This data is intended to be combined with other data sources (ie [NREL's Alternative Fuel Stations API](https://developer.nrel.gov/docs/transportation/alt-fuel-stations-v1/)) that do not include non-Tesla compatibility data.
+A compact lookup file of Tesla Supercharger stations in the US that are compatible with non-Tesla vehicles. This data is intended to be combined with other data sources (ie [NREL's Alternative Fuel Stations API](https://developer.nrel.gov/docs/transportation/alt-fuel-stations-v1/)) that do not include non-Tesla compatibility data. A full data download is also included.
+
+Data is updated nightly.
 
 ## Data
+
+**`stations.json`** (~10MB) Full data dump of Tesla Supercharger stations.
 
 **`compatible-stations.json`** (~21KB) contains geohash-6 codes for compatible stations:
 
@@ -22,7 +26,6 @@ To check if a station at `(lat, lng)` is compatible:
 
 1. Convert coordinates to a geohash-6 string
 2. Check if it exists in the `nacs` or `ccs` array
-3. Also check the 8 adjacent geohashes to handle cell boundary edge cases
 
 ### Example (JavaScript)
 
