@@ -35,6 +35,14 @@ jobs:
         run: |
           xvfb-run --auto-servernum python3 scrape.py
 
+      - name: Validate output
+        run: |
+          # Check that files exist and have content
+          test -s compatible-stations.json || (echo "compatible-stations.json is empty or missing" && exit 1)
+          test -s stations.json || (echo "stations.json is empty or missing" && exit 1)
+          # Check that JSON is valid and has data
+          python3 -c "import json; d=json.load(open('compatible-stations.json')); assert len(d.get('nacs',[])) > 100, 'Too few NACS stations'"
+
       - name: Commit and push if changed
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
